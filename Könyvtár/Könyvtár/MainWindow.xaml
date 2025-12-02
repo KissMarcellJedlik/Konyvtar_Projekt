@@ -84,6 +84,31 @@
         <!-- SIDEBAR AREA -->
         <Border Grid.Column="1" Background="White" Margin="0,20,20,20" 
                 BorderBrush="#e5e7eb" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- FORM HEADER -->
+                <Border Grid.Row="0" Background="#6366f1" Padding="20,16">
+                    <TextBlock x:Name="FormTitle" Text="Add New Book" FontSize="18" FontWeight="Bold" 
+                              Foreground="White" TextAlignment="Center"/>
+                </Border>
+
+                <!-- FORM CONTENT -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25">
+                    <StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- FORM ACTIONS -->
+                <Border Grid.Row="2" Background="#f3f4f6" Padding="20,16" BorderBrush="#e5e7eb" BorderThickness="1,0,0,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Border>
     </Grid>
 </Window>
