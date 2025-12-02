@@ -19,6 +19,8 @@ namespace ModernLibrary
             TitleTextBox.Clear();
             AuthorTextBox.Clear();
             IsbnTextBox.Clear();
+            YearTextBox.Clear();
+            PublisherTextBox.Clear();
         }
     }
 }

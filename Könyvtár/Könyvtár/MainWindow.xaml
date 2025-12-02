@@ -111,16 +111,42 @@
                         <TextBlock Text="ISBN" Margin="0,12,0,6"
                                   FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
                         <TextBox x:Name="IsbnTextBox"/>
+
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Year" Margin="0,0,0,6"
+                                          FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
+                                <TextBox x:Name="YearTextBox"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Genre" Margin="0,0,0,6"
+                                          FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
+                                <ComboBox x:Name="GenreComboBox"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="Publisher" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
+                        <TextBox x:Name="PublisherTextBox"/>
+
+                        <TextBlock Text="Status" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
+                        <ComboBox x:Name="StatusComboBox"/>
                     </StackPanel>
                 </ScrollViewer>
 
                 <!-- FORM ACTIONS -->
                 <Border Grid.Row="2" Background="#f3f4f6" Padding="20,16" BorderBrush="#e5e7eb" BorderThickness="1,0,0,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="➕ Add Book" 
+                        <Button x:Name="AddButton" Content="➕ Add Book" 
                                Background="#6366f1" Foreground="White"
                                Click="AddButton_Click" Padding="10,6" MinWidth="110"/>
-                        <Button Content="❌ Cancel" 
+                        <Button x:Name="CancelButton" Content="❌ Cancel" 
                                Background="Transparent" Foreground="#1f2937"
                                BorderBrush="#e5e7eb" BorderThickness="1"
                                Click="CancelButton_Click" Margin="8,0,0,0"
