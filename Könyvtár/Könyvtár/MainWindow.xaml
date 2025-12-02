@@ -100,12 +100,31 @@
                 <!-- FORM CONTENT -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25">
                     <StackPanel>
+                        <TextBlock Text="Book Title" Margin="0,0,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
+                        <TextBox x:Name="TitleTextBox"/>
+
+                        <TextBlock Text="Author" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
+                        <TextBox x:Name="AuthorTextBox"/>
+
+                        <TextBlock Text="ISBN" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="#1f2937"/>
+                        <TextBox x:Name="IsbnTextBox"/>
                     </StackPanel>
                 </ScrollViewer>
 
                 <!-- FORM ACTIONS -->
                 <Border Grid.Row="2" Background="#f3f4f6" Padding="20,16" BorderBrush="#e5e7eb" BorderThickness="1,0,0,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="➕ Add Book" 
+                               Background="#6366f1" Foreground="White"
+                               Click="AddButton_Click" Padding="10,6" MinWidth="110"/>
+                        <Button Content="❌ Cancel" 
+                               Background="Transparent" Foreground="#1f2937"
+                               BorderBrush="#e5e7eb" BorderThickness="1"
+                               Click="CancelButton_Click" Margin="8,0,0,0"
+                               Padding="10,6" MinWidth="80"/>
                     </StackPanel>
                 </Border>
             </Grid>

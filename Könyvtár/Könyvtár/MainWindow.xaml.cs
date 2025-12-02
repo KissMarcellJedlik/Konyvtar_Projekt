@@ -8,5 +8,17 @@ namespace ModernLibrary
         {
             InitializeComponent();
         }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Később implementáljuk
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            TitleTextBox.Clear();
+            AuthorTextBox.Clear();
+            IsbnTextBox.Clear();
+        }
     }
 }
