@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace ModernLibrary
@@ -30,6 +31,23 @@ namespace ModernLibrary
             StatusComboBox.Items.Add("Borrowed");
         }
 
+        private void UpdateStats()
+        {
+            int total = books.Count;
+            int available = books.Count(b => b.Status == "Available");
+            int borrowed = books.Count(b => b.Status == "Borrowed");
+
+            TotalBooksText.Text = total.ToString();
+            AvailableBooksText.Text = available.ToString();
+            BorrowedBooksText.Text = borrowed.ToString();
+        }
+
+        private void DisplayBooks()
+        {
+            BooksListBox.ItemsSource = null;
+            BooksListBox.ItemsSource = books;
+        }
+
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(TitleTextBox.Text) ||
@@ -54,6 +72,12 @@ namespace ModernLibrary
             };
 
             books.Add(book);
+            UpdateStats();
+            DisplayBooks();
+
+            // Űrlap törlése
+            CancelButton_Click(sender, e);
+
             MessageBox.Show("Book added successfully!");
         }
 
