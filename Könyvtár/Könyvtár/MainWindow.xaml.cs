@@ -21,6 +21,7 @@ namespace ModernLibrary
             InitializeComponent();
             InitializeComboBoxes();
             LoadData();
+            UpdateStats();
             DisplayBooks();
         }
 
@@ -29,6 +30,17 @@ namespace ModernLibrary
             StatusComboBox.Items.Clear();
             StatusComboBox.Items.Add("Available");
             StatusComboBox.Items.Add("Borrowed");
+        }
+
+        private void UpdateStats()
+        {
+            int total = books.Count;
+            int available = books.Count(b => b.Status == "Available");
+            int borrowed = books.Count(b => b.Status == "Borrowed");
+
+            TotalBooksText.Text = total.ToString();
+            AvailableBooksText.Text = available.ToString();
+            BorrowedBooksText.Text = borrowed.ToString();
         }
 
         private void LoadData()
@@ -105,6 +117,7 @@ namespace ModernLibrary
 
             books.Add(book);
             SaveData();
+            UpdateStats();
             DisplayBooks();
             ClearForm();
 
@@ -149,6 +162,7 @@ namespace ModernLibrary
             selectedBook.Status = StatusComboBox.SelectedItem?.ToString() ?? "Available";
 
             SaveData();
+            UpdateStats();
             DisplayBooks();
             ClearForm();
 
@@ -165,6 +179,7 @@ namespace ModernLibrary
             {
                 books.Remove(selectedBook);
                 SaveData();
+                UpdateStats();
                 DisplayBooks();
                 ClearForm();
             }
