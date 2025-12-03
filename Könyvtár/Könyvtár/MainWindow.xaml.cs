@@ -19,8 +19,16 @@ namespace ModernLibrary
         public MainWindow()
         {
             InitializeComponent();
+            InitializeComboBoxes();
             LoadData();
             DisplayBooks();
+        }
+
+        private void InitializeComboBoxes()
+        {
+            StatusComboBox.Items.Clear();
+            StatusComboBox.Items.Add("Available");
+            StatusComboBox.Items.Add("Borrowed");
         }
 
         private void LoadData()
@@ -92,7 +100,7 @@ namespace ModernLibrary
                 ISBN = IsbnTextBox.Text.Trim(),
                 Year = YearTextBox.Text.Trim(),
                 Genre = GenreTextBox.Text.Trim(),
-                Status = "Available"
+                Status = StatusComboBox.SelectedItem?.ToString() ?? "Available"
             };
 
             books.Add(book);
@@ -113,6 +121,7 @@ namespace ModernLibrary
                 IsbnTextBox.Text = selectedBook.ISBN;
                 YearTextBox.Text = selectedBook.Year;
                 GenreTextBox.Text = selectedBook.Genre;
+                StatusComboBox.SelectedItem = selectedBook.Status;
 
                 FormTitle.Text = "Edit Book";
                 AddButton.Visibility = Visibility.Collapsed;
@@ -137,6 +146,7 @@ namespace ModernLibrary
             selectedBook.ISBN = IsbnTextBox.Text.Trim();
             selectedBook.Year = YearTextBox.Text.Trim();
             selectedBook.Genre = GenreTextBox.Text.Trim();
+            selectedBook.Status = StatusComboBox.SelectedItem?.ToString() ?? "Available";
 
             SaveData();
             DisplayBooks();
