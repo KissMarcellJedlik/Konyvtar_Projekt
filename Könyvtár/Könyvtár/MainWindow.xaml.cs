@@ -1,45 +1,53 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
+using Newtonsoft.Json;
+using System.IO;
+using System.Linq;
 
 namespace ModernLibrary
 {
     public partial class MainWindow : Window
     {
+        private string dataFilePath = "library_data.json";
         private List<Book> books = new List<Book>();
 
         public MainWindow()
         {
             InitializeComponent();
-            InitializeComboBoxes();
+            LoadData();
+            DisplayBooks();
         }
 
-        private void InitializeComboBoxes()
+        private void LoadData()
         {
-            // Genre combobox
-            GenreComboBox.Items.Clear();
-            string[] genres = { "Fiction", "Science Fiction", "Mystery", "Romance", "Thriller",
-                              "Biography", "History", "Science", "Technology", "Fantasy" };
-            foreach (string genre in genres)
+            if (File.Exists(dataFilePath))
             {
-                GenreComboBox.Items.Add(genre);
+                try
+                {
+                    string json = File.ReadAllText(dataFilePath);
+                    books = JsonConvert.DeserializeObject<List<Book>>(json) ?? new List<Book>();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading data: {ex.Message}");
+                    books = new List<Book>();
+                }
             }
-
-            // Status combobox
-            StatusComboBox.Items.Clear();
-            StatusComboBox.Items.Add("Available");
-            StatusComboBox.Items.Add("Borrowed");
         }
 
-        private void UpdateStats()
+        private void SaveData()
         {
-            int total = books.Count;
-            int available = books.Count(b => b.Status == "Available");
-            int borrowed = books.Count(b => b.Status == "Borrowed");
-
-            TotalBooksText.Text = total.ToString();
-            AvailableBooksText.Text = available.ToString();
-            BorrowedBooksText.Text = borrowed.ToString();
+            try
+            {
+                string json = JsonConvert.SerializeObject(books, Formatting.Indented);
+                File.WriteAllText(dataFilePath, json);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving data: {ex.Message}");
+            }
         }
 
         private void DisplayBooks()
@@ -59,37 +67,44 @@ namespace ModernLibrary
 
             var book = new Book
             {
-                Id = books.Count > 0 ? books.Count + 1 : 1,
+                Id = books.Count > 0 ? books.Max(b => b.Id) + 1 : 1,
                 Title = TitleTextBox.Text.Trim(),
                 Author = AuthorTextBox.Text.Trim(),
                 ISBN = IsbnTextBox.Text.Trim(),
                 Year = YearTextBox.Text.Trim(),
-                Genre = GenreComboBox.SelectedItem?.ToString() ?? "Fiction",
-                Publisher = PublisherTextBox.Text.Trim(),
-                Status = StatusComboBox.SelectedItem?.ToString() ?? "Available",
-                Borrower = "",
-                DueDate = ""
+                Genre = GenreTextBox.Text.Trim(),
+                Status = "Available"
             };
 
             books.Add(book);
-            UpdateStats();
+            SaveData();
             DisplayBooks();
 
-            // Űrlap törlése
-            CancelButton_Click(sender, e);
-
-            MessageBox.Show("Book added successfully!");
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
             TitleTextBox.Clear();
             AuthorTextBox.Clear();
             IsbnTextBox.Clear();
             YearTextBox.Clear();
-            PublisherTextBox.Clear();
-            GenreComboBox.SelectedIndex = -1;
-            StatusComboBox.SelectedIndex = 0;
+            GenreTextBox.Clear();
+
+            MessageBox.Show("Book added successfully!");
+        }
+    }
+
+    public class Book : INotifyPropertyChanged
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public string ISBN { get; set; }
+        public string Year { get; set; }
+        public string Genre { get; set; }
+        public string Status { get; set; } = "Available";
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
