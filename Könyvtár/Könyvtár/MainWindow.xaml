@@ -77,28 +77,45 @@
         <!-- Sidebar form -->
         <Border Grid.Column="1" Background="White" Margin="0,20,20,20" 
                 BorderBrush="#e5e7eb" BorderThickness="1">
-            <StackPanel Margin="20">
-                <TextBlock Text="Add New Book" FontSize="16" FontWeight="Bold" Margin="0,0,0,20"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                <TextBlock Text="Title" Margin="0,0,0,5"/>
-                <TextBox x:Name="TitleTextBox" Margin="0,0,0,10"/>
+                <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="15,10">
+                    <TextBlock x:Name="FormTitle" Text="Add New Book" 
+                              Foreground="White" FontSize="16" FontWeight="Bold"/>
+                </Border>
 
-                <TextBlock Text="Author" Margin="0,0,0,5"/>
-                <TextBox x:Name="AuthorTextBox" Margin="0,0,0,10"/>
+                <ScrollViewer Grid.Row="1" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="Title" Margin="0,0,0,5"/>
+                        <TextBox x:Name="TitleTextBox" Margin="0,0,0,10"/>
 
-                <TextBlock Text="ISBN" Margin="0,0,0,5"/>
-                <TextBox x:Name="IsbnTextBox" Margin="0,0,0,10"/>
+                        <TextBlock Text="Author" Margin="0,0,0,5"/>
+                        <TextBox x:Name="AuthorTextBox" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Year" Margin="0,0,0,5"/>
-                <TextBox x:Name="YearTextBox" Margin="0,0,0,10"/>
+                        <TextBlock Text="ISBN" Margin="0,0,0,5"/>
+                        <TextBox x:Name="IsbnTextBox" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Genre" Margin="0,0,0,5"/>
-                <TextBox x:Name="GenreTextBox" Margin="0,0,0,20"/>
+                        <TextBlock Text="Year" Margin="0,0,0,5"/>
+                        <TextBox x:Name="YearTextBox" Margin="0,0,0,10"/>
 
-                <Button x:Name="UpdateButton" Content="Update" Click="UpdateButton_Click" 
-                       Margin="0,0,0,10" Visibility="Collapsed"/>
-                <Button x:Name="AddButton" Content="Add Book" Click="AddButton_Click"/>
-            </StackPanel>
+                        <TextBlock Text="Genre" Margin="0,0,0,5"/>
+                        <TextBox x:Name="GenreTextBox" Margin="0,0,0,20"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" Background="#f8f9fa" Padding="15,10" BorderBrush="#e5e7eb" BorderThickness="1,0,0,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="UpdateButton" Content="Update" Click="UpdateButton_Click" 
+                               Margin="0,0,10,0" Visibility="Collapsed"/>
+                        <Button x:Name="AddButton" Content="Add Book" Click="AddButton_Click"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Border>
     </Grid>
 </Window>

@@ -67,6 +67,7 @@ namespace ModernLibrary
             YearTextBox.Clear();
             GenreTextBox.Clear();
 
+            FormTitle.Text = "Add New Book";
             AddButton.Visibility = Visibility.Visible;
             UpdateButton.Visibility = Visibility.Collapsed;
 
@@ -113,6 +114,7 @@ namespace ModernLibrary
                 YearTextBox.Text = selectedBook.Year;
                 GenreTextBox.Text = selectedBook.Genre;
 
+                FormTitle.Text = "Edit Book";
                 AddButton.Visibility = Visibility.Collapsed;
                 UpdateButton.Visibility = Visibility.Visible;
                 isEditing = true;
@@ -161,13 +163,26 @@ namespace ModernLibrary
 
     public class Book : INotifyPropertyChanged
     {
+        private string _status;
+
         public int Id { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
         public string ISBN { get; set; }
         public string Year { get; set; }
         public string Genre { get; set; }
-        public string Status { get; set; } = "Available";
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                OnPropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(StatusColor));
+            }
+        }
+
+        public string StatusColor => Status == "Available" ? "#10b981" : "#f59e0b";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
