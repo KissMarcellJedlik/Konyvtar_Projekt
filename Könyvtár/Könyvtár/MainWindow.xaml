@@ -1,114 +1,255 @@
 ﻿<Window x:Class="ModernLibrary.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Library Manager" Height="650" Width="900">
+        Title="BookFlow Pro" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="#f8fafc">
 
     <Window.Resources>
+        <!-- VIBRANT COLOR SCHEME -->
         <Color x:Key="PrimaryColor">#6366f1</Color>
+        <Color x:Key="PrimaryLightColor">#818cf8</Color>
         <Color x:Key="SecondaryColor">#10b981</Color>
+        <Color x:Key="SecondaryLightColor">#34d399</Color>
         <Color x:Key="DangerColor">#ef4444</Color>
+        <Color x:Key="DangerLightColor">#f87171</Color>
         <Color x:Key="WarningColor">#f59e0b</Color>
+        <Color x:Key="WarningLightColor">#fbbf24</Color>
+        <Color x:Key="DarkColor">#1f2937</Color>
+        <Color x:Key="LightColor">#ffffff</Color>
+        <Color x:Key="GrayColor">#6b7280</Color>
+        <Color x:Key="LightGrayColor">#f3f4f6</Color>
 
+        <!-- SOLID COLOR BRUSHES -->
         <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+        <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource PrimaryLightColor}"/>
         <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+        <SolidColorBrush x:Key="SecondaryLightBrush" Color="{StaticResource SecondaryLightColor}"/>
         <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
+        <SolidColorBrush x:Key="DangerLightBrush" Color="{StaticResource DangerLightColor}"/>
         <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
+        <SolidColorBrush x:Key="WarningLightBrush" Color="{StaticResource WarningLightColor}"/>
+        <SolidColorBrush x:Key="DarkBrush" Color="{StaticResource DarkColor}"/>
+        <SolidColorBrush x:Key="LightBrush" Color="{StaticResource LightColor}"/>
+        <SolidColorBrush x:Key="GrayBrush" Color="{StaticResource GrayColor}"/>
+        <SolidColorBrush x:Key="LightGrayBrush" Color="{StaticResource LightGrayColor}"/>
 
+        <!-- GRADIENT BRUSHES -->
+        <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
+            <GradientStop Color="{StaticResource PrimaryLightColor}" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SecondaryGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{StaticResource SecondaryColor}" Offset="0"/>
+            <GradientStop Color="{StaticResource SecondaryLightColor}" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="DangerGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{StaticResource DangerColor}" Offset="0"/>
+            <GradientStop Color="{StaticResource DangerLightColor}" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- MODERN STYLES -->
         <Style TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#e5e7eb"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8"/>
-            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Height" Value="42"/>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Height" Value="42"/>
+        </Style>
+
+        <Style TargetType="DatePicker">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Height" Value="42"/>
         </Style>
 
         <Style TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryGradient}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
+
+        <Style x:Key="DeleteButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource DangerGradient}"/>
+        </Style>
+
+        <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource SecondaryGradient}"/>
+        </Style>
+
+        <Style x:Key="GhostButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkBrush}"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!-- ICON BUTTON STYLES -->
+        <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource GhostButton}">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+        </Style>
+
+        <!-- BOOK CARD TEMPLATE -->
+        <DataTemplate x:Key="BookCardTemplate">
+            <Border Background="White" Margin="0,0,0,8" BorderBrush="#e5e7eb" BorderThickness="1">
+                <Grid Margin="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- BOOK CONTENT -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="SemiBold" 
+                                  Foreground="{StaticResource DarkBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding Author}" FontSize="14" 
+                                  Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,6"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                            <Border Background="{Binding StatusColor}" Padding="6,3" Margin="0,0,6,0">
+                                <TextBlock Text="{Binding Status}" FontSize="11" 
+                                          Foreground="White" FontWeight="SemiBold"/>
+                            </Border>
+                            <Border Background="{StaticResource LightGrayBrush}" Padding="6,3" Margin="0,0,6,0">
+                                <TextBlock Text="{Binding Genre}" FontSize="11" 
+                                          Foreground="{StaticResource GrayBrush}"/>
+                            </Border>
+                            <TextBlock Text="{Binding Year}" FontSize="11" 
+                                      Foreground="{StaticResource GrayBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- ACTION BUTTONS -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="📖" Style="{StaticResource IconButton}" 
+                               Click="BorrowReturnButton_Click" Tag="{Binding Id}" 
+                               Margin="0,0,6,0" ToolTip="Borrow/Return" FontFamily="Segoe UI Emoji"/>
+                        <Button Content="✏️" Style="{StaticResource IconButton}" 
+                               Click="EditButton_Click" Tag="{Binding Id}" 
+                               Margin="0,0,6,0" ToolTip="Edit" FontFamily="Segoe UI Emoji"/>
+                        <Button Content="🗑️" Style="{StaticResource IconButton}" 
+                               Background="{StaticResource DangerGradient}" Foreground="White"
+                               Click="DeleteButton_Click" Tag="{Binding Id}" 
+                               ToolTip="Delete" FontFamily="Segoe UI Emoji"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Main content area -->
+        <!-- MAIN CONTENT -->
         <Grid Grid.Column="0" Margin="20">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Library Collection" 
-                      FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+            <!-- HEADER -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <Border Background="{StaticResource PrimaryGradient}" Padding="12,8" Margin="0,0,12,0" CornerRadius="8">
+                        <TextBlock Text="📚" FontSize="20" Foreground="White" FontFamily="Segoe UI Emoji"/>
+                    </Border>
+                    <TextBlock Text="BookFlow Pro" FontSize="24" FontWeight="Bold" 
+                              Foreground="{StaticResource DarkBrush}"/>
+                </StackPanel>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,20">
-                <Border Background="{StaticResource PrimaryBrush}" Padding="15,10" Margin="0,0,10,0">
-                    <StackPanel>
-                        <TextBlock Text="Total Books" Foreground="White" FontSize="12"/>
-                        <TextBlock x:Name="TotalBooksText" Text="0" Foreground="White" 
-                                  FontSize="18" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
+                <!-- STATS ROW -->
+                <StackPanel Orientation="Horizontal">
+                    <!-- TOTAL BOOKS -->
+                    <Border Background="{StaticResource PrimaryGradient}" Padding="20,15" Margin="0,0,15,0" 
+                            Width="180" CornerRadius="8">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock Text="📊" FontSize="16" Foreground="White" Margin="0,0,8,0" FontFamily="Segoe UI Emoji"/>
+                                <TextBlock Text="Total Books" FontSize="12" Foreground="White" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock x:Name="TotalBooksText" Text="0" FontSize="24" FontWeight="Bold" 
+                                      Foreground="White"/>
+                        </StackPanel>
+                    </Border>
 
-                <Border Background="{StaticResource SecondaryBrush}" Padding="15,10" Margin="0,0,10,0">
-                    <StackPanel>
-                        <TextBlock Text="Available" Foreground="White" FontSize="12"/>
-                        <TextBlock x:Name="AvailableBooksText" Text="0" Foreground="White" 
-                                  FontSize="18" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
+                    <!-- AVAILABLE BOOKS -->
+                    <Border Background="{StaticResource SecondaryGradient}" Padding="20,15" Margin="0,0,15,0" 
+                            Width="180" CornerRadius="8">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock Text="✅" FontSize="16" Foreground="White" Margin="0,0,8,0" FontFamily="Segoe UI Emoji"/>
+                                <TextBlock Text="Available" FontSize="12" Foreground="White" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock x:Name="AvailableBooksText" Text="0" FontSize="24" FontWeight="Bold" 
+                                      Foreground="White"/>
+                        </StackPanel>
+                    </Border>
 
-                <Border Background="{StaticResource WarningBrush}" Padding="15,10">
-                    <StackPanel>
-                        <TextBlock Text="Borrowed" Foreground="White" FontSize="12"/>
-                        <TextBlock x:Name="BorrowedBooksText" Text="0" Foreground="White" 
-                                  FontSize="18" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
+                    <!-- BORROWED BOOKS -->
+                    <Border Background="{StaticResource WarningBrush}" Padding="20,15" 
+                            Width="180" CornerRadius="8">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock Text="📖" FontSize="16" Foreground="White" Margin="0,0,8,0" FontFamily="Segoe UI Emoji"/>
+                                <TextBlock Text="Borrowed" FontSize="12" Foreground="White" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock x:Name="BorrowedBooksText" Text="0" FontSize="24" FontWeight="Bold" 
+                                      Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
             </StackPanel>
 
-            <ListBox Grid.Row="2" x:Name="BooksListBox" Background="White"
-                    BorderBrush="#e5e7eb" BorderThickness="1"
-                    SelectionChanged="BooksListBox_SelectionChanged">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="White" Margin="0,0,0,8" BorderBrush="#e5e7eb" BorderThickness="1">
-                            <Grid Margin="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold"/>
-                                    <TextBlock Text="{Binding Author}" FontSize="12" Foreground="#666"/>
-                                    <Border Background="{Binding StatusColor}" Padding="4,2" Margin="0,5,0,0" CornerRadius="3">
-                                        <TextBlock Text="{Binding Status}" FontSize="10" Foreground="White"/>
-                                    </Border>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                    <Button Content="Edit" Margin="0,0,5,0" Padding="6,3"/>
-                                    <Button Content="Delete" Background="{StaticResource DangerBrush}" 
-                                            Click="DeleteButton_Click" Padding="6,3"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <!-- BOOKS LIST -->
+            <StackPanel Grid.Row="1">
+                <TextBlock Text="📚 Library Collection" FontSize="18" FontWeight="SemiBold" 
+                          Foreground="{StaticResource DarkBrush}" Margin="0,0,0,12" FontFamily="Segoe UI Emoji"/>
+                <ListBox x:Name="BooksListBox" ItemTemplate="{StaticResource BookCardTemplate}"
+                        Background="White" BorderThickness="1" BorderBrush="#e5e7eb"
+                        Height="500" SelectionChanged="BooksListBox_SelectionChanged"
+                        MouseDown="BooksListBox_MouseDown"/>
+            </StackPanel>
         </Grid>
 
-        <!-- Sidebar form -->
-        <Border Grid.Column="1" Background="White" Margin="0,20,20,20" 
-                BorderBrush="#e5e7eb" BorderThickness="1">
+        <!-- SIDEBAR FORM -->
+        <Border Grid.Column="1" Background="White" Margin="0,20,20,20" BorderBrush="#e5e7eb" BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -116,38 +257,90 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="15,10">
-                    <TextBlock x:Name="FormTitle" Text="Add New Book" 
-                              Foreground="White" FontSize="16" FontWeight="Bold"/>
+                <!-- FORM HEADER -->
+                <Border Grid.Row="0" Background="{StaticResource PrimaryGradient}" Padding="20,16">
+                    <TextBlock x:Name="FormTitle" Text="Add New Book" FontSize="18" FontWeight="Bold" 
+                              Foreground="White" TextAlignment="Center"/>
                 </Border>
 
-                <ScrollViewer Grid.Row="1" Padding="20">
+                <!-- FORM CONTENT -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25">
                     <StackPanel>
-                        <TextBlock Text="Title" Margin="0,0,0,5"/>
-                        <TextBox x:Name="TitleTextBox" Margin="0,0,0,10"/>
+                        <TextBlock Text="Book Title" Margin="0,0,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                        <TextBox x:Name="TitleTextBox"/>
 
-                        <TextBlock Text="Author" Margin="0,0,0,5"/>
-                        <TextBox x:Name="AuthorTextBox" Margin="0,0,0,10"/>
+                        <TextBlock Text="Author" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                        <TextBox x:Name="AuthorTextBox"/>
 
-                        <TextBlock Text="ISBN" Margin="0,0,0,5"/>
-                        <TextBox x:Name="IsbnTextBox" Margin="0,0,0,10"/>
+                        <TextBlock Text="ISBN" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                        <TextBox x:Name="IsbnTextBox"/>
 
-                        <TextBlock Text="Year" Margin="0,0,0,5"/>
-                        <TextBox x:Name="YearTextBox" Margin="0,0,0,10"/>
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Year" Margin="0,0,0,6"
+                                          FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                                <TextBox x:Name="YearTextBox"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Genre" Margin="0,0,0,6"
+                                          FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                                <ComboBox x:Name="GenreComboBox"/>
+                            </StackPanel>
+                        </Grid>
 
-                        <TextBlock Text="Genre" Margin="0,0,0,5"/>
-                        <TextBox x:Name="GenreTextBox" Margin="0,0,0,10"/>
+                        <TextBlock Text="Publisher" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                        <TextBox x:Name="PublisherTextBox"/>
 
-                        <TextBlock Text="Status" Margin="0,0,0,5"/>
-                        <ComboBox x:Name="StatusComboBox" Margin="0,0,0,20"/>
+                        <TextBlock Text="Status" Margin="0,12,0,6"
+                                  FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                        <ComboBox x:Name="StatusComboBox" SelectionChanged="StatusComboBox_SelectionChanged"/>
+
+                        <!-- BORROWER SECTION -->
+                        <Border x:Name="BorrowerSection" Background="{StaticResource LightGrayBrush}" Padding="15" Margin="0,12,0,0" 
+                               Visibility="Collapsed" CornerRadius="6">
+                            <StackPanel>
+                                <TextBlock Text="Borrower Name" Margin="0,0,0,8"
+                                          FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource DarkBrush}"/>
+                                <TextBox x:Name="BorrowerTextBox" Margin="0,0,0,8"/>
+                                <TextBlock Text="Due Date" Margin="0,0,0,6"
+                                          FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
+                                <DatePicker x:Name="DueDatePicker"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
 
-                <Border Grid.Row="2" Background="#f8f9fa" Padding="15,10" BorderBrush="#e5e7eb" BorderThickness="1,0,0,0">
+                <!-- FORM ACTIONS -->
+                <Border Grid.Row="2" Background="{StaticResource LightGrayBrush}" Padding="20,16" BorderBrush="#e5e7eb" BorderThickness="1,0,0,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="UpdateButton" Content="Update" Click="UpdateButton_Click" 
-                               Margin="0,0,10,0" Visibility="Collapsed"/>
-                        <Button x:Name="AddButton" Content="Add Book" Click="AddButton_Click"/>
+                        <Button x:Name="BorrowReturnButton" Content="📖 Borrow" 
+                               Style="{StaticResource SuccessButton}" 
+                               Click="BorrowReturnButton_Click" Margin="0,0,8,0"
+                               Visibility="Collapsed" FontFamily="Segoe UI Emoji"
+                               MinWidth="100" Padding="10,6"/>
+                        <Button x:Name="UpdateButton" Content="✏️ Update" 
+                               Style="{StaticResource GhostButton}" 
+                               Click="UpdateButton_Click" Margin="0,0,8,0"
+                               Visibility="Collapsed" FontFamily="Segoe UI Emoji"
+                               MinWidth="90" Padding="10,6"/>
+                        <Button x:Name="AddButton" Content="➕ Add Book" 
+                               Style="{StaticResource SuccessButton}" 
+                               Click="AddButton_Click" FontFamily="Segoe UI Emoji"
+                               MinWidth="110" Padding="10,6"/>
+                        <Button x:Name="CancelButton" Content="❌ Cancel" 
+                               Style="{StaticResource GhostButton}" 
+                               Click="CancelButton_Click" Margin="8,0,0,0"
+                               Visibility="Collapsed" FontFamily="Segoe UI Emoji"
+                               MinWidth="80" Padding="10,6"/>
                     </StackPanel>
                 </Border>
             </Grid>
