@@ -99,13 +99,28 @@ namespace ModernLibrary
             PublisherTextBox.Clear();
             GenreComboBox.SelectedIndex = -1;
             StatusComboBox.SelectedIndex = 0;
+            BorrowerTextBox.Clear();
+            DueDatePicker.SelectedDate = null;
+            BorrowerSection.Visibility = Visibility.Collapsed;
 
             FormTitle.Text = "Add New Book";
             AddButton.Visibility = Visibility.Visible;
             UpdateButton.Visibility = Visibility.Collapsed;
+            BorrowReturnButton.Visibility = Visibility.Collapsed;
+            CancelButton.Visibility = Visibility.Collapsed;
 
             selectedBook = null;
             isEditing = false;
+        }
+
+        private void ShowBorrowerSection()
+        {
+            BorrowerSection.Visibility = Visibility.Visible;
+        }
+
+        private void HideBorrowerSection()
+        {
+            BorrowerSection.Visibility = Visibility.Collapsed;
         }
 
         // ===== EVENT HANDLERS =====
@@ -128,7 +143,9 @@ namespace ModernLibrary
                 Year = YearTextBox.Text.Trim(),
                 Genre = GenreComboBox.SelectedItem?.ToString() ?? "Fiction",
                 Publisher = PublisherTextBox.Text.Trim(),
-                Status = StatusComboBox.SelectedItem?.ToString() ?? "Available"
+                Status = StatusComboBox.SelectedItem?.ToString() ?? "Available",
+                Borrower = "",
+                DueDate = ""
             };
 
             books.Add(book);
@@ -198,33 +215,108 @@ namespace ModernLibrary
         private void BorrowReturnButton_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
+            Book bookToUpdate = null;
+
             if (button?.Tag != null)
             {
                 int bookId = (int)button.Tag;
-                var book = books.FirstOrDefault(b => b.Id == bookId);
-
-                if (book != null)
-                {
-                    if (book.Status == "Available")
-                    {
-                        book.Status = "Borrowed";
-                        book.Borrower = "Borrower";
-                        book.DueDate = DateTime.Now.AddDays(14).ToString("yyyy-MM-dd");
-                        MessageBox.Show($"Book '{book.Title}' borrowed!");
-                    }
-                    else
-                    {
-                        book.Status = "Available";
-                        book.Borrower = "";
-                        book.DueDate = "";
-                        MessageBox.Show($"Book '{book.Title}' returned!");
-                    }
-
-                    SaveData();
-                    UpdateStats();
-                    DisplayBooks();
-                }
+                bookToUpdate = books.FirstOrDefault(b => b.Id == bookId);
             }
+
+            if (bookToUpdate == null)
+            {
+                bookToUpdate = selectedBook;
+            }
+
+            if (bookToUpdate == null)
+            {
+                MessageBox.Show("No book selected!");
+                return;
+            }
+
+            if (bookToUpdate.Status == "Available")
+            {
+                // Borrow book
+                string borrowerName = "";
+                DateTime? dueDate = null;
+
+                if (isEditing && selectedBook != null && selectedBook.Id == bookToUpdate.Id)
+                {
+                    // Use form data
+                    if (string.IsNullOrWhiteSpace(BorrowerTextBox.Text))
+                    {
+                        MessageBox.Show("Please enter borrower name!");
+                        BorrowerTextBox.Focus();
+                        return;
+                    }
+
+                    if (DueDatePicker.SelectedDate == null)
+                    {
+                        MessageBox.Show("Please select due date!");
+                        DueDatePicker.Focus();
+                        return;
+                    }
+
+                    borrowerName = BorrowerTextBox.Text.Trim();
+                    dueDate = DueDatePicker.SelectedDate;
+                }
+                else
+                {
+                    // Direct click from book card
+                    borrowerName = "Borrower";
+                    dueDate = DateTime.Now.AddDays(14);
+                }
+
+                bookToUpdate.Status = "Borrowed";
+                bookToUpdate.Borrower = borrowerName;
+                bookToUpdate.DueDate = dueDate.Value.ToString("yyyy-MM-dd");
+
+                SaveData();
+                UpdateStats();
+                DisplayBooks();
+
+                if (selectedBook != null && selectedBook.Id == bookToUpdate.Id)
+                {
+                    selectedBook = bookToUpdate;
+                }
+
+                if (isEditing && selectedBook != null && selectedBook.Id == bookToUpdate.Id)
+                {
+                    ClearForm();
+                }
+
+                MessageBox.Show($"Book '{bookToUpdate.Title}' borrowed by {bookToUpdate.Borrower}");
+            }
+            else
+            {
+                // Return book
+                string bookTitle = bookToUpdate.Title;
+
+                bookToUpdate.Status = "Available";
+                bookToUpdate.Borrower = "";
+                bookToUpdate.DueDate = "";
+
+                SaveData();
+                UpdateStats();
+                DisplayBooks();
+
+                if (selectedBook != null && selectedBook.Id == bookToUpdate.Id)
+                {
+                    selectedBook = bookToUpdate;
+                }
+
+                if (isEditing && selectedBook != null && selectedBook.Id == bookToUpdate.Id)
+                {
+                    ClearForm();
+                }
+
+                MessageBox.Show($"Book '{bookTitle}' returned successfully!");
+            }
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            ClearForm();
         }
 
         private void BooksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -240,13 +332,69 @@ namespace ModernLibrary
                 GenreComboBox.SelectedItem = selectedBook.Genre;
                 PublisherTextBox.Text = selectedBook.Publisher;
                 StatusComboBox.SelectedItem = selectedBook.Status;
+                BorrowerTextBox.Text = selectedBook.Borrower;
+
+                if (!string.IsNullOrEmpty(selectedBook.DueDate) &&
+                    DateTime.TryParse(selectedBook.DueDate, out DateTime dueDate))
+                {
+                    DueDatePicker.SelectedDate = dueDate;
+                }
+                else
+                {
+                    DueDatePicker.SelectedDate = DateTime.Now.AddDays(14);
+                }
 
                 // Update UI for editing
                 FormTitle.Text = "Edit Book";
                 AddButton.Visibility = Visibility.Collapsed;
                 UpdateButton.Visibility = Visibility.Visible;
+                CancelButton.Visibility = Visibility.Visible;
+
+                // Show/hide borrower section based on status
+                if (selectedBook.Status == "Borrowed")
+                {
+                    ShowBorrowerSection();
+                    BorrowReturnButton.Content = "📖 Return";
+                    BorrowReturnButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    ShowBorrowerSection();
+                    BorrowReturnButton.Content = "📖 Borrow";
+                    BorrowReturnButton.Visibility = Visibility.Visible;
+
+                    if (string.IsNullOrWhiteSpace(BorrowerTextBox.Text))
+                    {
+                        BorrowerTextBox.Clear();
+                        DueDatePicker.SelectedDate = DateTime.Now.AddDays(14);
+                    }
+                }
 
                 isEditing = true;
+            }
+        }
+
+        private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isEditing && StatusComboBox.SelectedItem != null)
+            {
+                var selectedStatus = StatusComboBox.SelectedItem.ToString();
+
+                if (selectedStatus == "Borrowed")
+                {
+                    ShowBorrowerSection();
+                    BorrowReturnButton.Content = "📖 Borrow";
+                    BorrowReturnButton.Visibility = Visibility.Visible;
+                }
+                else if (selectedStatus == "Available")
+                {
+                    HideBorrowerSection();
+                    BorrowReturnButton.Content = "📖 Borrow";
+                    BorrowReturnButton.Visibility = Visibility.Collapsed;
+
+                    BorrowerTextBox.Clear();
+                    DueDatePicker.SelectedDate = null;
+                }
             }
         }
 
