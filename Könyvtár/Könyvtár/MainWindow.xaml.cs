@@ -184,6 +184,26 @@ namespace ModernLibrary
                 ClearForm();
             }
         }
+
+        private void BorrowReturnButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedBook == null) return;
+
+            if (selectedBook.Status == "Available")
+            {
+                selectedBook.Status = "Borrowed";
+                MessageBox.Show("Book borrowed!");
+            }
+            else
+            {
+                selectedBook.Status = "Available";
+                MessageBox.Show("Book returned!");
+            }
+
+            SaveData();
+            UpdateStats();
+            DisplayBooks();
+        }
     }
 
     public class Book : INotifyPropertyChanged
