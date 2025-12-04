@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
@@ -111,6 +112,9 @@ namespace ModernLibrary
 
             selectedBook = null;
             isEditing = false;
+
+            // Deselect from ListBox
+            BooksListBox.SelectedItem = null;
         }
 
         private void ShowBorrowerSection()
@@ -143,7 +147,7 @@ namespace ModernLibrary
                 Year = YearTextBox.Text.Trim(),
                 Genre = GenreComboBox.SelectedItem?.ToString() ?? "Fiction",
                 Publisher = PublisherTextBox.Text.Trim(),
-                Status = StatusComboBox.SelectedItem?.ToString() ?? "Available",
+                Status = "Available",
                 Borrower = "",
                 DueDate = ""
             };
@@ -174,7 +178,27 @@ namespace ModernLibrary
             selectedBook.Year = YearTextBox.Text.Trim();
             selectedBook.Genre = GenreComboBox.SelectedItem?.ToString() ?? "Fiction";
             selectedBook.Publisher = PublisherTextBox.Text.Trim();
-            selectedBook.Status = StatusComboBox.SelectedItem?.ToString() ?? "Available";
+
+            // Only update status if it's actually changed
+            var newStatus = StatusComboBox.SelectedItem?.ToString() ?? "Available";
+            if (selectedBook.Status != newStatus)
+            {
+                selectedBook.Status = newStatus;
+
+                // If changing to Available, clear borrower info
+                if (newStatus == "Available")
+                {
+                    selectedBook.Borrower = "";
+                    selectedBook.DueDate = "";
+                }
+                // If changing to Borrowed, ensure borrower info is set
+                else if (newStatus == "Borrowed" && string.IsNullOrWhiteSpace(selectedBook.Borrower))
+                {
+                    // Don't allow changing to Borrowed without borrower info
+                    MessageBox.Show("Cannot change status to Borrowed without borrower information!");
+                    return;
+                }
+            }
 
             SaveData();
             UpdateStats();
@@ -203,6 +227,7 @@ namespace ModernLibrary
                         UpdateStats();
                         DisplayBooks();
 
+                        // If the deleted book was currently selected, clear the form
                         if (selectedBook != null && selectedBook.Id == bookId)
                         {
                             ClearForm();
@@ -214,6 +239,7 @@ namespace ModernLibrary
 
         private void BorrowReturnButton_Click(object sender, RoutedEventArgs e)
         {
+            // Get book from button tag
             var button = sender as Button;
             Book bookToUpdate = null;
 
@@ -223,6 +249,7 @@ namespace ModernLibrary
                 bookToUpdate = books.FirstOrDefault(b => b.Id == bookId);
             }
 
+            // If not found via button tag, try the currently selected book
             if (bookToUpdate == null)
             {
                 bookToUpdate = selectedBook;
@@ -240,6 +267,7 @@ namespace ModernLibrary
                 string borrowerName = "";
                 DateTime? dueDate = null;
 
+                // Check if we're in edit mode (form is showing the book)
                 if (isEditing && selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     // Use form data
@@ -262,7 +290,7 @@ namespace ModernLibrary
                 }
                 else
                 {
-                    // Direct click from book card
+                    // Direct click from book card - use default values
                     borrowerName = "Borrower";
                     dueDate = DateTime.Now.AddDays(14);
                 }
@@ -275,6 +303,7 @@ namespace ModernLibrary
                 UpdateStats();
                 DisplayBooks();
 
+                // Update the selectedBook reference if it's the same book
                 if (selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     selectedBook = bookToUpdate;
@@ -300,6 +329,7 @@ namespace ModernLibrary
                 UpdateStats();
                 DisplayBooks();
 
+                // Update the selectedBook reference if it's the same book
                 if (selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     selectedBook = bookToUpdate;
@@ -321,6 +351,12 @@ namespace ModernLibrary
 
         private void BooksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // If clicking on empty space to deselect, handle it
+            if (BooksListBox.SelectedItem == null && !isEditing)
+            {
+                return;
+            }
+
             selectedBook = BooksListBox.SelectedItem as Book;
             if (selectedBook != null)
             {
@@ -363,6 +399,7 @@ namespace ModernLibrary
                     BorrowReturnButton.Content = "📖 Borrow";
                     BorrowReturnButton.Visibility = Visibility.Visible;
 
+                    // Clear borrower fields for new borrowing
                     if (string.IsNullOrWhiteSpace(BorrowerTextBox.Text))
                     {
                         BorrowerTextBox.Clear();
@@ -372,6 +409,36 @@ namespace ModernLibrary
 
                 isEditing = true;
             }
+        }
+
+        // Click on empty space to deselect
+        private void BooksListBox_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Check if click is on empty space (not on an item)
+            var listBox = sender as ListBox;
+            if (listBox != null)
+            {
+                var hitTestResult = VisualTreeHelper.HitTest(listBox, e.GetPosition(listBox));
+                if (hitTestResult != null)
+                {
+                    var listBoxItem = FindParent<ListBoxItem>(hitTestResult.VisualHit);
+                    if (listBoxItem == null)
+                    {
+                        // Clicked on empty space - deselect
+                        listBox.SelectedItem = null;
+                        ClearForm();
+                    }
+                }
+            }
+        }
+
+        // Helper method to find parent of specific type
+        private static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            var parent = VisualTreeHelper.GetParent(child);
+            if (parent == null) return null;
+            if (parent is T parentOfType) return parentOfType;
+            return FindParent<T>(parent);
         }
 
         private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -392,6 +459,7 @@ namespace ModernLibrary
                     BorrowReturnButton.Content = "📖 Borrow";
                     BorrowReturnButton.Visibility = Visibility.Collapsed;
 
+                    // Clear borrower fields when switching to Available
                     BorrowerTextBox.Clear();
                     DueDatePicker.SelectedDate = null;
                 }
