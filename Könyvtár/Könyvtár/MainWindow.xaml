@@ -6,7 +6,6 @@
         Background="#f8fafc">
 
     <Window.Resources>
-        <!-- VIBRANT COLOR SCHEME -->
         <Color x:Key="PrimaryColor">#6366f1</Color>
         <Color x:Key="PrimaryLightColor">#818cf8</Color>
         <Color x:Key="SecondaryColor">#10b981</Color>
@@ -20,7 +19,6 @@
         <Color x:Key="GrayColor">#6b7280</Color>
         <Color x:Key="LightGrayColor">#f3f4f6</Color>
 
-        <!-- SOLID COLOR BRUSHES -->
         <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
         <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource PrimaryLightColor}"/>
         <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
@@ -34,7 +32,6 @@
         <SolidColorBrush x:Key="GrayBrush" Color="{StaticResource GrayColor}"/>
         <SolidColorBrush x:Key="LightGrayBrush" Color="{StaticResource LightGrayColor}"/>
 
-        <!-- GRADIENT BRUSHES -->
         <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="{StaticResource PrimaryColor}" Offset="0"/>
             <GradientStop Color="{StaticResource PrimaryLightColor}" Offset="1"/>
@@ -50,7 +47,6 @@
             <GradientStop Color="{StaticResource DangerLightColor}" Offset="1"/>
         </LinearGradientBrush>
 
-        <!-- MODERN STYLES -->
         <Style TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#e5e7eb"/>
@@ -117,7 +113,6 @@
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
 
-        <!-- ICON BUTTON STYLES -->
         <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource GhostButton}">
             <Setter Property="Width" Value="36"/>
             <Setter Property="Height" Value="36"/>
@@ -126,7 +121,6 @@
             <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
         </Style>
 
-        <!-- BOOK CARD TEMPLATE - FIXED HEIGHT -->
         <DataTemplate x:Key="BookCardTemplate">
             <Border Background="White" Margin="0,0,0,8" BorderBrush="#e5e7eb" BorderThickness="1" Height="120">
                 <Grid Margin="16">
@@ -135,7 +129,6 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- BOOK CONTENT -->
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="SemiBold" 
                                   Foreground="{StaticResource DarkBrush}" Margin="0,0,0,4"
@@ -158,7 +151,6 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- ACTION BUTTONS -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Content="📖" Style="{StaticResource IconButton}" 
                                Click="BorrowReturnButton_Click" Tag="{Binding Id}" 
@@ -182,14 +174,12 @@
             <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
 
-        <!-- MAIN CONTENT -->
         <Grid Grid.Column="0" Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- HEADER -->
             <StackPanel Grid.Row="0" Margin="0,0,0,20">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
                     <Border Background="{StaticResource PrimaryGradient}" Padding="12,8" Margin="0,0,12,0" CornerRadius="8">
@@ -199,9 +189,7 @@
                               Foreground="{StaticResource DarkBrush}"/>
                 </StackPanel>
 
-                <!-- STATS ROW -->
                 <StackPanel Orientation="Horizontal">
-                    <!-- TOTAL BOOKS -->
                     <Border Background="{StaticResource PrimaryGradient}" Padding="20,15" Margin="0,0,15,0" 
                             Width="180" CornerRadius="8">
                         <StackPanel>
@@ -214,7 +202,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- AVAILABLE BOOKS -->
                     <Border Background="{StaticResource SecondaryGradient}" Padding="20,15" Margin="0,0,15,0" 
                             Width="180" CornerRadius="8">
                         <StackPanel>
@@ -227,7 +214,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- BORROWED BOOKS -->
                     <Border Background="{StaticResource WarningBrush}" Padding="20,15" 
                             Width="180" CornerRadius="8">
                         <StackPanel>
@@ -242,7 +228,6 @@
                 </StackPanel>
             </StackPanel>
 
-            <!-- BOOKS LIST -->
             <StackPanel Grid.Row="1">
                 <TextBlock Text="📚 Library Collection" FontSize="18" FontWeight="SemiBold" 
                           Foreground="{StaticResource DarkBrush}" Margin="0,0,0,12" FontFamily="Segoe UI Emoji"/>
@@ -253,7 +238,6 @@
             </StackPanel>
         </Grid>
 
-        <!-- SIDEBAR FORM -->
         <Border Grid.Column="1" Background="White" Margin="0,20,20,20" BorderBrush="#e5e7eb" BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
@@ -262,13 +246,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- FORM HEADER -->
                 <Border Grid.Row="0" Background="{StaticResource PrimaryGradient}" Padding="20,16">
                     <TextBlock x:Name="FormTitle" Text="Add New Book" FontSize="18" FontWeight="Bold" 
                               Foreground="White" TextAlignment="Center"/>
                 </Border>
 
-                <!-- FORM CONTENT -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25">
                     <StackPanel>
                         <TextBlock Text="Book Title" Margin="0,0,0,6"
@@ -309,7 +291,6 @@
                                   FontSize="14" FontWeight="Medium" Foreground="{StaticResource DarkBrush}"/>
                         <ComboBox x:Name="StatusComboBox" SelectionChanged="StatusComboBox_SelectionChanged"/>
 
-                        <!-- BORROWER SECTION -->
                         <Border x:Name="BorrowerSection" Background="{StaticResource LightGrayBrush}" Padding="15" Margin="0,12,0,0" 
                                Visibility="Collapsed">
                             <StackPanel>
@@ -324,7 +305,6 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- FORM ACTIONS -->
                 <Border Grid.Row="2" Background="{StaticResource LightGrayBrush}" Padding="20,16" BorderBrush="#e5e7eb" BorderThickness="1,0,0,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button x:Name="BorrowReturnButton" Content="📖 Borrow" 

@@ -168,7 +168,6 @@ namespace ModernLibrary
             BorrowerSection.Visibility = Visibility.Collapsed;
         }
 
-        // ========== VALIDATION METHODS ==========
         private bool ValidateRequiredFields()
         {
             List<string> errors = new List<string>();
@@ -208,7 +207,6 @@ namespace ModernLibrary
         {
             List<string> errors = new List<string>();
 
-            // Year validation: 4 digits, 1000-2099
             if (!string.IsNullOrWhiteSpace(YearTextBox.Text))
             {
                 if (!Regex.IsMatch(YearTextBox.Text, @"^\d{4}$"))
@@ -228,7 +226,6 @@ namespace ModernLibrary
                 }
             }
 
-            // ISBN validation: 10 or 13 digits, optional hyphens
             if (!string.IsNullOrWhiteSpace(IsbnTextBox.Text))
             {
                 string cleanedIsbn = IsbnTextBox.Text.Replace("-", "").Replace(" ", "");
@@ -238,13 +235,11 @@ namespace ModernLibrary
                 }
             }
 
-            // Title validation: at least 2 characters
             if (!string.IsNullOrWhiteSpace(TitleTextBox.Text) && TitleTextBox.Text.Trim().Length < 2)
             {
                 errors.Add("• Title must be at least 2 characters long");
             }
 
-            // Author validation: at least 2 characters
             if (!string.IsNullOrWhiteSpace(AuthorTextBox.Text) && AuthorTextBox.Text.Trim().Length < 2)
             {
                 errors.Add("• Author name must be at least 2 characters long");
@@ -299,7 +294,6 @@ namespace ModernLibrary
         {
             string isbn = IsbnTextBox.Text.Trim();
 
-            // Check if ISBN already exists (excluding current book when editing)
             bool isbnExists = books.Any(b =>
                 b.ISBN.Equals(isbn, StringComparison.OrdinalIgnoreCase) &&
                 (currentIsbn == null || !b.ISBN.Equals(currentIsbn, StringComparison.OrdinalIgnoreCase)));
@@ -314,27 +308,21 @@ namespace ModernLibrary
 
             return true;
         }
-        // ========== END VALIDATION METHODS ==========
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Validate required fields
             if (!ValidateRequiredFields())
                 return;
 
-            // 2. Validate field formats
             if (!ValidateFieldFormats())
                 return;
 
-            // 3. Validate borrower info
             if (!ValidateBorrowerInfo())
                 return;
 
-            // 4. Validate unique ISBN
             if (!ValidateUniqueIsbn())
                 return;
 
-            // Create new book
             var book = new Book
             {
                 Id = books.Count > 0 ? books.Max(b => b.Id) + 1 : 1,
@@ -349,14 +337,12 @@ namespace ModernLibrary
                 DueDate = ""
             };
 
-            // If status is Borrowed, add borrower info
             if (book.Status == "Borrowed")
             {
                 book.Borrower = BorrowerTextBox.Text.Trim();
                 book.DueDate = DueDatePicker.SelectedDate?.ToString("yyyy-MM-dd") ?? "";
             }
 
-            // Add book to collection
             books.Add(book);
             SaveData();
             UpdateStats();
@@ -370,26 +356,20 @@ namespace ModernLibrary
         {
             if (selectedBook == null) return;
 
-            // 1. Validate required fields
             if (!ValidateRequiredFields())
                 return;
 
-            // 2. Validate field formats
             if (!ValidateFieldFormats())
                 return;
 
-            // 3. Validate borrower info
             if (!ValidateBorrowerInfo())
                 return;
 
-            // 4. Validate unique ISBN (excluding current book)
             if (!ValidateUniqueIsbn(selectedBook.ISBN))
                 return;
 
-            // Store old status for comparison
             string oldStatus = selectedBook.Status;
 
-            // Update book properties
             selectedBook.Title = TitleTextBox.Text.Trim();
             selectedBook.Author = AuthorTextBox.Text.Trim();
             selectedBook.ISBN = IsbnTextBox.Text.Trim();
@@ -400,7 +380,6 @@ namespace ModernLibrary
             var newStatus = StatusComboBox.SelectedItem?.ToString() ?? "Available";
             selectedBook.Status = newStatus;
 
-            // Handle status change
             if (newStatus == "Borrowed")
             {
                 selectedBook.Borrower = BorrowerTextBox.Text.Trim();
@@ -474,11 +453,9 @@ namespace ModernLibrary
 
             if (bookToUpdate.Status == "Available")
             {
-                // BORROW the book
                 string borrowerName = BorrowerTextBox.Text.Trim();
                 DateTime? dueDate = DueDatePicker.SelectedDate;
 
-                // Validate borrower info if we're in edit mode
                 if (isEditing && selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     if (string.IsNullOrWhiteSpace(borrowerName))
@@ -504,12 +481,10 @@ namespace ModernLibrary
                 }
                 else
                 {
-                    // Default values if not in edit mode
                     borrowerName = "Borrower";
                     dueDate = DateTime.Now.AddDays(14);
                 }
 
-                // Update book status
                 bookToUpdate.Status = "Borrowed";
                 bookToUpdate.Borrower = borrowerName;
                 bookToUpdate.DueDate = dueDate.Value.ToString("yyyy-MM-dd");
@@ -518,13 +493,11 @@ namespace ModernLibrary
                 UpdateStats();
                 DisplayBooks();
 
-                // Update selected book reference
                 if (selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     selectedBook = bookToUpdate;
                 }
 
-                // Clear form if editing
                 if (isEditing && selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     ClearForm();
@@ -535,7 +508,6 @@ namespace ModernLibrary
             }
             else
             {
-                // RETURN the book
                 string bookTitle = bookToUpdate.Title;
 
                 bookToUpdate.Status = "Available";
@@ -546,13 +518,11 @@ namespace ModernLibrary
                 UpdateStats();
                 DisplayBooks();
 
-                // Update selected book reference
                 if (selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     selectedBook = bookToUpdate;
                 }
 
-                // Clear form if editing
                 if (isEditing && selectedBook != null && selectedBook.Id == bookToUpdate.Id)
                 {
                     ClearForm();
@@ -578,7 +548,6 @@ namespace ModernLibrary
             selectedBook = BooksListBox.SelectedItem as Book;
             if (selectedBook != null)
             {
-                // Fill form with book data
                 TitleTextBox.Text = selectedBook.Title;
                 AuthorTextBox.Text = selectedBook.Author;
                 IsbnTextBox.Text = selectedBook.ISBN;
@@ -598,13 +567,11 @@ namespace ModernLibrary
                     DueDatePicker.SelectedDate = DateTime.Now.AddDays(14);
                 }
 
-                // Update form UI
                 FormTitle.Text = "Edit Book";
                 AddButton.Visibility = Visibility.Collapsed;
                 UpdateButton.Visibility = Visibility.Visible;
                 CancelButton.Visibility = Visibility.Visible;
 
-                // Show/hide borrower section based on status
                 if (selectedBook.Status == "Borrowed")
                 {
                     ShowBorrowerSection();
@@ -617,7 +584,6 @@ namespace ModernLibrary
                     BorrowReturnButton.Content = "📖 Borrow";
                     BorrowReturnButton.Visibility = Visibility.Visible;
 
-                    // Set default values for borrower info
                     if (string.IsNullOrWhiteSpace(BorrowerTextBox.Text))
                     {
                         BorrowerTextBox.Clear();
@@ -693,10 +659,8 @@ namespace ModernLibrary
             }
         }
 
-        // Input validation handlers
         private void YearTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Allow only digits
             foreach (char c in e.Text)
             {
                 if (!char.IsDigit(c))
@@ -709,7 +673,6 @@ namespace ModernLibrary
 
         private void YearTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Limit year to 4 digits
             if (YearTextBox.Text.Length > 4)
             {
                 YearTextBox.Text = YearTextBox.Text.Substring(0, 4);
@@ -719,7 +682,6 @@ namespace ModernLibrary
 
         private void IsbnTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Allow digits, hyphens, and X for ISBN
             foreach (char c in e.Text)
             {
                 if (!char.IsDigit(c) && c != '-' && c != 'X' && c != 'x')
@@ -730,25 +692,20 @@ namespace ModernLibrary
             }
         }
 
-        // Input handlers for other fields (optional, for character limits)
         private void TitleTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Allow any input for title
         }
 
         private void AuthorTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Allow any input for author
         }
 
         private void PublisherTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Allow any input for publisher
         }
 
         private void BorrowerTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Allow any input for borrower
         }
     }
 

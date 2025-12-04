@@ -1,8 +1,8 @@
 [
   {
     "Id": 2,
-    "Title": "To Kill a Mockingbird",
-    "Author": "Harper Lee",
+    "Title": "I ate nicker",
+    "Author": "Fckn N",
     "ISBN": "9780061120084",
     "Year": "1960",
     "Genre": "Fiction",
@@ -306,9 +306,22 @@
     "Year": "1847",
     "Genre": "Gothic Fiction",
     "Publisher": "Smith, Elder & Co.",
-    "Status": "Available",
-    "Borrower": "",
-    "DueDate": "",
-    "StatusColor": "#10b981"
+    "Status": "Borrowed",
+    "Borrower": "Borrower",
+    "DueDate": "2025-12-18",
+    "StatusColor": "#f59e0b"
+  },
+  {
+    "Id": 26,
+    "Title": "adsad",
+    "Author": "asdasd",
+    "ISBN": "2314567425",
+    "Year": "2012",
+    "Genre": "Science Fiction",
+    "Publisher": "asdd",
+    "Status": "Borrowed",
+    "Borrower": "Borrower",
+    "DueDate": "2025-12-18",
+    "StatusColor": "#f59e0b"
   }
 ]
