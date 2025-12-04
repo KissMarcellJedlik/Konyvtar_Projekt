@@ -171,38 +171,58 @@ namespace ModernLibrary
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedBook == null) return;
-
-            var result = MessageBox.Show($"Are you sure you want to delete '{selectedBook.Title}'?",
-                                        "Confirm Delete", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
+            var button = sender as Button;
+            if (button?.Tag != null)
             {
-                books.Remove(selectedBook);
-                SaveData();
-                UpdateStats();
-                DisplayBooks();
-                ClearForm();
+                int bookId = (int)button.Tag;
+                var bookToDelete = books.FirstOrDefault(b => b.Id == bookId);
+
+                if (bookToDelete != null)
+                {
+                    var result = MessageBox.Show($"Are you sure you want to delete '{bookToDelete.Title}'?",
+                                               "Confirm Delete", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        books.Remove(bookToDelete);
+                        SaveData();
+                        UpdateStats();
+                        DisplayBooks();
+
+                        if (selectedBook != null && selectedBook.Id == bookId)
+                        {
+                            ClearForm();
+                        }
+                    }
+                }
             }
         }
 
         private void BorrowReturnButton_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedBook == null) return;
-
-            if (selectedBook.Status == "Available")
+            var button = sender as Button;
+            if (button?.Tag != null)
             {
-                selectedBook.Status = "Borrowed";
-                MessageBox.Show("Book borrowed!");
-            }
-            else
-            {
-                selectedBook.Status = "Available";
-                MessageBox.Show("Book returned!");
-            }
+                int bookId = (int)button.Tag;
+                var book = books.FirstOrDefault(b => b.Id == bookId);
 
-            SaveData();
-            UpdateStats();
-            DisplayBooks();
+                if (book != null)
+                {
+                    if (book.Status == "Available")
+                    {
+                        book.Status = "Borrowed";
+                        MessageBox.Show($"Book '{book.Title}' borrowed!");
+                    }
+                    else
+                    {
+                        book.Status = "Available";
+                        MessageBox.Show($"Book '{book.Title}' returned!");
+                    }
+
+                    SaveData();
+                    UpdateStats();
+                    DisplayBooks();
+                }
+            }
         }
     }
 
