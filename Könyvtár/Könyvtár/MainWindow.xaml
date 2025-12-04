@@ -60,6 +60,7 @@
             <Setter Property="Foreground" Value="{StaticResource DarkBrush}"/>
             <Setter Property="Margin" Value="0,0,0,12"/>
             <Setter Property="Height" Value="42"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style TargetType="ComboBox">
@@ -71,6 +72,7 @@
             <Setter Property="Foreground" Value="{StaticResource DarkBrush}"/>
             <Setter Property="Margin" Value="0,0,0,12"/>
             <Setter Property="Height" Value="42"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style TargetType="DatePicker">
@@ -82,6 +84,7 @@
             <Setter Property="Foreground" Value="{StaticResource DarkBrush}"/>
             <Setter Property="Margin" Value="0,0,0,12"/>
             <Setter Property="Height" Value="42"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style TargetType="Button">
@@ -123,9 +126,9 @@
             <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
         </Style>
 
-        <!-- BOOK CARD TEMPLATE -->
+        <!-- BOOK CARD TEMPLATE - FIXED HEIGHT -->
         <DataTemplate x:Key="BookCardTemplate">
-            <Border Background="White" Margin="0,0,0,8" BorderBrush="#e5e7eb" BorderThickness="1">
+            <Border Background="White" Margin="0,0,0,8" BorderBrush="#e5e7eb" BorderThickness="1" Height="120">
                 <Grid Margin="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -133,13 +136,15 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- BOOK CONTENT -->
-                    <StackPanel Grid.Column="0">
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="SemiBold" 
-                                  Foreground="{StaticResource DarkBrush}" Margin="0,0,0,4"/>
+                                  Foreground="{StaticResource DarkBrush}" Margin="0,0,0,4"
+                                  TextTrimming="CharacterEllipsis"/>
                         <TextBlock Text="{Binding Author}" FontSize="14" 
-                                  Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,6"/>
+                                  Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,6"
+                                  TextTrimming="CharacterEllipsis"/>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                             <Border Background="{Binding StatusColor}" Padding="6,3" Margin="0,0,6,0">
                                 <TextBlock Text="{Binding Status}" FontSize="11" 
                                           Foreground="White" FontWeight="SemiBold"/>
@@ -306,7 +311,7 @@
 
                         <!-- BORROWER SECTION -->
                         <Border x:Name="BorrowerSection" Background="{StaticResource LightGrayBrush}" Padding="15" Margin="0,12,0,0" 
-                               Visibility="Collapsed" CornerRadius="6">
+                               Visibility="Collapsed">
                             <StackPanel>
                                 <TextBlock Text="Borrower Name" Margin="0,0,0,8"
                                           FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource DarkBrush}"/>
