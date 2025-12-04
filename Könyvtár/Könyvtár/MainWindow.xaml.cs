@@ -19,28 +19,10 @@ namespace ModernLibrary
         public MainWindow()
         {
             InitializeComponent();
-            InitializeComboBoxes();
             LoadData();
+            InitializeComboBoxes();
             UpdateStats();
             DisplayBooks();
-        }
-
-        private void InitializeComboBoxes()
-        {
-            StatusComboBox.Items.Clear();
-            StatusComboBox.Items.Add("Available");
-            StatusComboBox.Items.Add("Borrowed");
-        }
-
-        private void UpdateStats()
-        {
-            int total = books.Count;
-            int available = books.Count(b => b.Status == "Available");
-            int borrowed = books.Count(b => b.Status == "Borrowed");
-
-            TotalBooksText.Text = total.ToString();
-            AvailableBooksText.Text = available.ToString();
-            BorrowedBooksText.Text = borrowed.ToString();
         }
 
         private void LoadData()
@@ -73,6 +55,35 @@ namespace ModernLibrary
             }
         }
 
+        private void InitializeComboBoxes()
+        {
+            // Genre combobox
+            GenreComboBox.Items.Clear();
+            string[] genres = { "Fiction", "Science Fiction", "Mystery", "Romance", "Thriller",
+                              "Biography", "History", "Science", "Technology", "Fantasy",
+                              "Horror", "Children", "Young Adult", "Poetry", "Drama" };
+            foreach (string genre in genres)
+            {
+                GenreComboBox.Items.Add(genre);
+            }
+
+            // Status combobox
+            StatusComboBox.Items.Clear();
+            StatusComboBox.Items.Add("Available");
+            StatusComboBox.Items.Add("Borrowed");
+        }
+
+        private void UpdateStats()
+        {
+            int total = books.Count;
+            int available = books.Count(b => b.Status == "Available");
+            int borrowed = books.Count(b => b.Status == "Borrowed");
+
+            TotalBooksText.Text = total.ToString();
+            AvailableBooksText.Text = available.ToString();
+            BorrowedBooksText.Text = borrowed.ToString();
+        }
+
         private void DisplayBooks()
         {
             BooksListBox.ItemsSource = null;
@@ -85,7 +96,9 @@ namespace ModernLibrary
             AuthorTextBox.Clear();
             IsbnTextBox.Clear();
             YearTextBox.Clear();
-            GenreTextBox.Clear();
+            PublisherTextBox.Clear();
+            GenreComboBox.SelectedIndex = -1;
+            StatusComboBox.SelectedIndex = 0;
 
             FormTitle.Text = "Add New Book";
             AddButton.Visibility = Visibility.Visible;
@@ -94,6 +107,8 @@ namespace ModernLibrary
             selectedBook = null;
             isEditing = false;
         }
+
+        // ===== EVENT HANDLERS =====
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
@@ -111,7 +126,8 @@ namespace ModernLibrary
                 Author = AuthorTextBox.Text.Trim(),
                 ISBN = IsbnTextBox.Text.Trim(),
                 Year = YearTextBox.Text.Trim(),
-                Genre = GenreTextBox.Text.Trim(),
+                Genre = GenreComboBox.SelectedItem?.ToString() ?? "Fiction",
+                Publisher = PublisherTextBox.Text.Trim(),
                 Status = StatusComboBox.SelectedItem?.ToString() ?? "Available"
             };
 
@@ -122,25 +138,6 @@ namespace ModernLibrary
             ClearForm();
 
             MessageBox.Show("Book added successfully!");
-        }
-
-        private void BooksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            selectedBook = BooksListBox.SelectedItem as Book;
-            if (selectedBook != null)
-            {
-                TitleTextBox.Text = selectedBook.Title;
-                AuthorTextBox.Text = selectedBook.Author;
-                IsbnTextBox.Text = selectedBook.ISBN;
-                YearTextBox.Text = selectedBook.Year;
-                GenreTextBox.Text = selectedBook.Genre;
-                StatusComboBox.SelectedItem = selectedBook.Status;
-
-                FormTitle.Text = "Edit Book";
-                AddButton.Visibility = Visibility.Collapsed;
-                UpdateButton.Visibility = Visibility.Visible;
-                isEditing = true;
-            }
         }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
@@ -158,7 +155,8 @@ namespace ModernLibrary
             selectedBook.Author = AuthorTextBox.Text.Trim();
             selectedBook.ISBN = IsbnTextBox.Text.Trim();
             selectedBook.Year = YearTextBox.Text.Trim();
-            selectedBook.Genre = GenreTextBox.Text.Trim();
+            selectedBook.Genre = GenreComboBox.SelectedItem?.ToString() ?? "Fiction";
+            selectedBook.Publisher = PublisherTextBox.Text.Trim();
             selectedBook.Status = StatusComboBox.SelectedItem?.ToString() ?? "Available";
 
             SaveData();
@@ -210,11 +208,15 @@ namespace ModernLibrary
                     if (book.Status == "Available")
                     {
                         book.Status = "Borrowed";
+                        book.Borrower = "Borrower";
+                        book.DueDate = DateTime.Now.AddDays(14).ToString("yyyy-MM-dd");
                         MessageBox.Show($"Book '{book.Title}' borrowed!");
                     }
                     else
                     {
                         book.Status = "Available";
+                        book.Borrower = "";
+                        book.DueDate = "";
                         MessageBox.Show($"Book '{book.Title}' returned!");
                     }
 
@@ -224,18 +226,56 @@ namespace ModernLibrary
                 }
             }
         }
+
+        private void BooksListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedBook = BooksListBox.SelectedItem as Book;
+            if (selectedBook != null)
+            {
+                // Fill form with book data
+                TitleTextBox.Text = selectedBook.Title;
+                AuthorTextBox.Text = selectedBook.Author;
+                IsbnTextBox.Text = selectedBook.ISBN;
+                YearTextBox.Text = selectedBook.Year;
+                GenreComboBox.SelectedItem = selectedBook.Genre;
+                PublisherTextBox.Text = selectedBook.Publisher;
+                StatusComboBox.SelectedItem = selectedBook.Status;
+
+                // Update UI for editing
+                FormTitle.Text = "Edit Book";
+                AddButton.Visibility = Visibility.Collapsed;
+                UpdateButton.Visibility = Visibility.Visible;
+
+                isEditing = true;
+            }
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button?.Tag != null)
+            {
+                int bookId = (int)button.Tag;
+                selectedBook = books.FirstOrDefault(b => b.Id == bookId);
+                if (selectedBook != null)
+                {
+                    BooksListBox.SelectedItem = selectedBook;
+                }
+            }
+        }
     }
 
     public class Book : INotifyPropertyChanged
     {
-        private string _status;
-
         public int Id { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
         public string ISBN { get; set; }
         public string Year { get; set; }
         public string Genre { get; set; }
+        public string Publisher { get; set; }
+
+        private string _status;
         public string Status
         {
             get => _status;
@@ -247,7 +287,16 @@ namespace ModernLibrary
             }
         }
 
-        public string StatusColor => Status == "Available" ? "#10b981" : "#f59e0b";
+        public string Borrower { get; set; }
+        public string DueDate { get; set; }
+
+        public string StatusColor
+        {
+            get
+            {
+                return Status == "Available" ? "#10b981" : "#f59e0b";
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
